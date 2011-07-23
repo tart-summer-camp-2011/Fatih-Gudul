@@ -1,0 +1,3 @@
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^sniff/([^/]+) /index.php?controller=$1 [NC]
