@@ -17,6 +17,10 @@
 class sniffRegisterController extends sniffController {
 
    public function execute(sniffRequest $request, sniffResponse $response) {
+      $validator = new Zend_Validate_EmailAddress();
+      
+      if ($validator->isValid($request->getValue('email'))) {
+        // email appears to be valid
       $db = $this->factory->getDatabase(DSN);
       $res = $db->query(
          'insert into user (USERNAME,PASSWD,EMAIL,NAME) values ("%s","%s","%s","%s")',
@@ -32,6 +36,17 @@ class sniffRegisterController extends sniffController {
       mail($request->getValue('email'), 'welcome to SNIFF', $msg, 'From: housekeeping@sniff.mobile');
       header('Location: /sniff/home?message=Welcome,%20please%20login!',302);
       die();
+      
+      } else {
+        // email is invalid; print the reasons
+      foreach ($validator->getMessages() as $message) {
+        echo "$message\n";
+      header('Location: /sniff/register',302);
+      }
+      
+      
+      
+      }
    }
 
 }
